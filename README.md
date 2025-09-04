@@ -1,0 +1,1 @@
+Konstruktorok ilyenek vannak. De lehetne kfactoryik is
