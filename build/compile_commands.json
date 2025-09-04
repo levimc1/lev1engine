@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/lev1/Projects/C/lev1engine/build",
+  "command": "/usr/bin/c++  -I/home/lev1/Projects/C/lev1engine/code -std=gnu++20 -o CMakeFiles/engine.dir/code/engine/main.cpp.o -c /home/lev1/Projects/C/lev1engine/code/engine/main.cpp",
+  "file": "/home/lev1/Projects/C/lev1engine/code/engine/main.cpp",
+  "output": "CMakeFiles/engine.dir/code/engine/main.cpp.o"
+}
+]
