@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/lev1/Projects/C/lev1engine/code
 
-CXX_FLAGS = -std=gnu++20
+CXX_FLAGS =  -fsanitize=address -g -std=gnu++20
 

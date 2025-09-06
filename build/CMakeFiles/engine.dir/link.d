@@ -2,6 +2,8 @@ engine: \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.1.1/../../../../lib/Scrt1.o \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.1.1/../../../../lib/crti.o \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.1.1/crtbeginS.o \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/15.1.1/../../../../lib/libasan_preinit.o \
+  /usr/lib/gcc/x86_64-pc-linux-gnu/15.1.1/../../../../lib/libasan.so \
   CMakeFiles/engine.dir/code/engine/main.cpp.o \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.1.1/../../../../lib/libglfw.so \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.1.1/../../../../lib/libGLEW.so \
@@ -54,6 +56,10 @@ engine: \
 /usr/lib/gcc/x86_64-pc-linux-gnu/15.1.1/../../../../lib/crti.o:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/15.1.1/crtbeginS.o:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/15.1.1/../../../../lib/libasan_preinit.o:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/15.1.1/../../../../lib/libasan.so:
 
 CMakeFiles/engine.dir/code/engine/main.cpp.o:
 
