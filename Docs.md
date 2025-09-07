@@ -40,6 +40,7 @@
 - ```eventh::use(EventhContext)``` Kontextus beállítása.  
 
 > > Internálisan, töri az összes carry-t. main-nek állítsa be
+
 > > emit és subscribe a main-hez ad.  
 
 - ```eventh::carry(EventhContext, int(mask))``` A context egyik valamilyét hazsnálja  
