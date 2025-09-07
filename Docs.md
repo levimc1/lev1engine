@@ -27,7 +27,7 @@
 
 ### Publikus API:
 
-#### !FONTOS! ha a contextus változik, akkor vele lévő minden (kivéve poller) is!
+***!FONTOS!*** *ha a contextus változik, akkor vele lévő minden (kivéve poller) is!*
 
 - ```eventh::emit<Event>(%Event konstruktor args...%)``` Akármelyik Listener ami fel van iratkozva a poll() után meg fogja kapni  
 
