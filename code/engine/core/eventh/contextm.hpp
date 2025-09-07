@@ -29,7 +29,11 @@ namespace eventh {
 
     static std::vector<EventhContext> ctx_active; // az csak egy int...
     static std::unordered_map<unsigned int, int> ctx_carry; 
+  }
+
+  namespace internal {
     
+    using namespace eventh::contextm;
     template<typename Event>
     ListenerList<Event> all_listeners() {
       ListenerList<Event> out;
@@ -52,30 +56,29 @@ namespace eventh {
       return out;
     }
 
-  }
+    template<typename Event>
+    void ensure_registered() {
+      static bool registered = false;
+      pollers().push_back([]() {
+      auto q = internal::all_queues<Event>();
+      auto l = internal::all_listeners<Event>();
 
-  template<typename Event>
-  void ensure_registered() {
-    static bool registered = false;
-    pollers().push_back([]() {
-    auto q = contextm::all_queues<Event>();
-    auto l = contextm::all_listeners<Event>();
-
-    for (auto& eventqptr : q) {
-      Queue<Event>& eventq = *eventqptr;
-      for (auto& event : eventq) {
-        for (auto& listenersptr : l) {
-          Listeners<Event>& listeners = *listenersptr; //? lehet felesleges
-          for (auto& listener : listeners) {
-            if (cancelled<Event>()) {break;}
-            listener(event);
+      for (auto& eventqptr : q) {
+        Queue<Event>& eventq = *eventqptr;
+        for (auto& event : eventq) {
+          for (auto& listenersptr : l) {
+            Listeners<Event>& listeners = *listenersptr; //? lehet felesleges
+            for (auto& listener : listeners) {
+              if (cancelled<Event>()) {break;}
+              listener(event);
+            }
           }
         }
+        eventq.clear();
       }
-      eventq.clear();
+      });
+      registered = true;
     }
-    });
-    registered = true;
   }
    
   static void use(const EventhContext& ctx) {

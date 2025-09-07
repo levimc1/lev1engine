@@ -4,30 +4,33 @@
 
 namespace eventh {
 
-  template<typename Event>
-  bool& cancelled() {
-    static bool cancelled = false;
-    return cancelled;
+  namespace internal {
+    template<typename Event>
+    bool& cancelled() {
+      static bool cancelled = false;
+      return cancelled;
+    }
+
+    std::vector<void(*)()> resetters;
+
   }
 
-  std::vector<void(*)()> resetters;
-
-  template<typename Event>
-  inline void cancel() {
-    resetters.push_back([](){
-      cancelled<Event>() = false;
-    });
-    cancelled<Event>() = true;
-  }
+    template<typename Event>
+    inline void cancel() {
+      internal::resetters.push_back([](){
+        internal::cancelled<Event>() = false;
+      });
+      internal::cancelled<Event>() = true;
+    }
 
   template<typename Event>
   inline void set_cancelled(bool state) {
     if (state) {
-     resetters.push_back([](){
-        cancelled<Event>() = false;
+     internal::resetters.push_back([](){
+        internal::cancelled<Event>() = false;
       });
     }
-    cancelled<Event>() = state;
+    internal::cancelled<Event>() = state;
   }
 
 }

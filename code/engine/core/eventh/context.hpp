@@ -42,8 +42,10 @@ namespace eventh {
 
   };
 
-  std::vector<PollerFn>& pollers() {
-    static std::vector<PollerFn> pollers;
-    return pollers;
+  namespace internal {
+    std::vector<PollerFn>& pollers() {
+      static std::vector<PollerFn> pollers;
+      return pollers;
+    }
   }
 }
