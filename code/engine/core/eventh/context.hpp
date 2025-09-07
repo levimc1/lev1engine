@@ -27,9 +27,9 @@ namespace eventh {
       return queues[id];
     }
 
-   template<typename Event>
-    std::vector<void(*)(Event&)>& listeners() {
-      static std::vector<std::vector<void(*)(Event&)>> listeners;
+    template<typename Event>
+    std::vector<std::function<void(Event&)>>& listeners() {
+      static std::vector<std::vector<std::function<void(Event&)>>> listeners;
       if (listeners.size() <= id) listeners.resize(id + 1);
       return listeners[id];
     }

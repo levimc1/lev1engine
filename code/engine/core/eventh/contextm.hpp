@@ -13,6 +13,11 @@ using Queue = std::vector<Event>;
 template<typename Event>
 using Listeners = std::vector<std::function<void(Event&)>>;
 
+template<typename Event>
+using ListenerList = std::vector<std::vector<std::function<void(Event&)>>*>;
+
+template<typename Event>
+using QueueList = std::vector<std::vector<Event>*>;
 
 namespace eventh {
 
@@ -26,42 +31,49 @@ namespace eventh {
     static std::unordered_map<unsigned int, int> ctx_carry; 
     
     template<typename Event>
-    void all_listeners(std::vector<std::function<void(Event&)>>& out) {
+    ListenerList<Event> all_listeners() {
+      ListenerList<Event> out;
       for (EventhContext& ctx : ctx_active) {
         if (ctx_carry[ctx.id] & LISTENERS_BIT) {
-          for (auto& element : ctx.listeners<Event>()) {
-            out.push_back(element);
-          }
+          out.push_back(&ctx.listeners<Event>());
         }
       }
+      return out;
     }
 
     template<typename Event>
-    void all_queues(std::vector<Event>& out) {
+    QueueList<Event> all_queues() {
+      QueueList<Event> out;
       for (EventhContext& ctx : ctx_active) {
         if (ctx_carry[ctx.id] & EVENTS_BIT) {
-          for (auto& element : ctx.queue<Event>()) {
-            out.push_back(element);
-          }
+          out.push_back(&ctx.queue<Event>());
         }
       }
+      return out;
     }
+
   }
 
   template<typename Event>
   void ensure_registered() {
     static bool registered = false;
     pollers().push_back([]() {
-    Queue<Event> q; contextm::all_queues<Event>(q);
-    Listeners<Event> l; contextm::all_listeners<Event>(l);
+    auto q = contextm::all_queues<Event>();
+    auto l = contextm::all_listeners<Event>();
 
-    for (auto& event : q) {
-      for (auto& listener : l) {
-        if (cancelled<Event>()) {break;}
-        listener(event);
+    for (auto& eventqptr : q) {
+      Queue<Event>& eventq = *eventqptr;
+      for (auto& event : eventq) {
+        for (auto& listenersptr : l) {
+          Listeners<Event>& listeners = *listenersptr; //? lehet felesleges
+          for (auto& listener : listeners) {
+            if (cancelled<Event>()) {break;}
+            listener(event);
+          }
+        }
       }
+      eventq.clear();
     }
-    q.clear();
     });
     registered = true;
   }
