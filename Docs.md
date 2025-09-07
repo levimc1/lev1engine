@@ -31,7 +31,7 @@
 
 - ```eventh::emit<Event>(%Event konstruktor args...%)``` Akármelyik Listener ami fel van iratkozva a poll() után meg fogja kapni  
 
-> > Internálisan, pollereket csinálunk minden eventhez.  
+  > Internálisan, pollereket csinálunk minden eventhez.  
 
 - ```eventh::subscribe<Event>(std::function)``` Egy Listener feliratkoztatása egy eventre
 - ```eventh::poll()``` Evenetek továbbítása minden listenernek.
@@ -39,13 +39,13 @@
 
 - ```eventh::use(EventhContext)``` Kontextus beállítása.  
 
-> > Internálisan, töri az összes carry-t. main-nek állítsa be
+  > Internálisan, töri az összes carry-t. main-nek állítsa be
 
-> > emit és subscribe a main-hez ad.  
+  > emit és subscribe a main-hez ad.  
 
 - ```eventh::carry(EventhContext, int(mask))``` A context egyik valamilyét hazsnálja  
 
-> > Használat: eventh::carry(ctx2, LISTENER_BIT | QUEUE_BIT)
+  > Használat: eventh::carry(ctx2, LISTENER_BIT | QUEUE_BIT)
 
 - ```eventh::init() -> EventhContext&``` initizálja egy contextel, nem szükséges.  
 
