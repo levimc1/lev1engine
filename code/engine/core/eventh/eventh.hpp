@@ -28,10 +28,10 @@ namespace eventh {
 
     internal::ensure_registered<Event>();
     Event event(std::forward<Args>(args)...);
-    ListenerList listenersl = internal::all_listeners<Event>();
-    for (auto& listenersptr : listenersl) {
-      Listeners listeners = listenersptr; 
-      for (auto& listener : internal::all_listeners<Event>()) {
+    auto l = internal::all_listeners<Event>();
+    for (auto& listenersptr : l) {
+      Listeners<Event>& listeners = *listenersptr; //? lehet felesleges
+      for (auto& listener : listeners) {
         listener(event);
       }
     }
