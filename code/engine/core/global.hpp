@@ -3,5 +3,5 @@
 
 namespace globalm {
 
-  
+  bool running;  
 }

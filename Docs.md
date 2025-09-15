@@ -36,7 +36,6 @@
 - ```eventh::subscribe<Event>(std::function)``` Egy Listener feliratkoztatása egy eventre
 - ```eventh::poll()``` Evenetek továbbítása minden listenernek.
 - ```eventh::emit_now()``` Az eventet elküldi várás nélkül  
-
 - ```eventh::use(EventhContext)``` Kontextus beállítása.  
 
   > Internálisan, töri az összes carry-t. main-nek állítsa be
@@ -48,5 +47,46 @@
   > Használat: eventh::carry(ctx2, LISTENER_BIT | QUEUE_BIT)
 
 - ```eventh::init() -> EventhContext&``` initizálja egy contextel, nem szükséges.  
+
+***
+
+## Task Manager - taskm
+
+### Namespace: taskm, internal
+
+- taskm -> Publikus API
+- internal -> Internális
+
+***
+
+### Mappa: code/engine/core/taskm
+
+***
+
+### File-ok:
+
+- flag.hpp -> Flagok kezelése
+- flow.hpp -> A rendszer ami eldönti mi következik mi után
+- task.hpp -> A feladat objektuma, és ami kapcsolódik
+- taskm.hpp -> A feladatok kezelése
+- def_flow/ -> Jövőben áthelyezve a Task Scheduler modulhoz  
+
+***
+
+### Publikus API:
+
+- ```taskm::init()``` Feladatkezelő initizálása. Nem kötelező.0
+- ```taskm::cleanup()``` Üres
+- ```taskm::tick()``` Egy tick futtatása, futtassa az összes feladatot
+- ```taskm::make_task(Kondíció/Funkció)``` Feladat OBJEKTUM létrehozása  
+- ```taskm::condition(...)``` make_task-hez segítő
+- ```taskm::process(...)``` make_task-hez segítő  
+- ```taskm::add()``` Feladat hozzáadása, **SZÜKSÉGES A RENDSZER MŰKÖDÉSÉHEZ**
+- ```taskm::run()``` Egy task futtatása
+- ```taskm::controller()``` Egy void() regisztrálása hogy minden frame-ben meghatározza a next-et.  
+
+ > Internális okokból, elég szimpla. Ne igazán használd
+
+- ```taskm::flag<Típus, Address típusa>(Address értéke)``` Egy flag megszerzése(Reference)
 
 ***

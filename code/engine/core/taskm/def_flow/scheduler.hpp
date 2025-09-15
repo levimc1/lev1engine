@@ -6,6 +6,10 @@
 #include <algorithm>
 #include <map>
 
+//! SZAR
+
+
+
 namespace taskm {
 
   // TODO: megoldás ahoz is ha nincsen delta time és ezek, csak futás.
@@ -18,6 +22,24 @@ namespace taskm {
 
   struct TimePoint {
     std::chrono::steady_clock::time_point time;
+
+    bool operator<(const TimePoint& other) const noexcept {
+      return time < other.time;
+    }
+
+    bool operator==(const TimePoint& other) const noexcept {
+      return time == other.time;
+    }
+
+    struct Hash {
+      std::size_t operator()(const TimePoint& tp) const noexcept {
+        return std::hash<int64_t>()(
+          std::chrono::duration_cast<std::chrono::nanoseconds>(
+            tp.time.time_since_epoch()
+          ).count()
+        );
+      }
+    };
   };
 
   TimePoint timepoint(std::chrono::steady_clock::time_point time) {return {time};}

@@ -16,8 +16,7 @@ namespace taskm {
     };
 
     std::vector<Controller> controllers;
-    std::unordered_set<TaskID> failed;
-    std::vector<Task*> next;
+    std::unordered_set<TaskID, TaskID::Hash> failed;
     
   }
 
@@ -27,11 +26,11 @@ namespace taskm {
 
   inline void run(TaskID id) {
     if (id.pos < internal::tasks.size()) {
-      internal::next.push_back(&internal::tasks[id.pos]);
+      internal::next.push_back(id.pos);
     }
   }
 
   void end() {
-    internal::next.push_back(nullptr);
+    internal::next.push_back(TaskAddress(nullptr));
   }
 }

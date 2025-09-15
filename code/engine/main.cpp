@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <engine/core/eventh/eventh.hpp>
+#include <engine/core/taskm/taskm.hpp>
 
 struct MyEvent {
   MyEvent(std::string data) : data(data) {}
@@ -35,6 +36,34 @@ int main() {
   eventh::use(ctx1);
   eventh::emit<MyEvent>("Esemény6 - ctx visszaváltva");
   eventh::poll();
+
+
+  taskm::init();
+  auto task1 = taskm::make_task(1,
+    taskm::condition([]() {
+      static int count = 0;
+      count++;
+      std::cout << "Feltétel ellenőrzés: " << count << std::endl;
+      return count <= 2;
+  }),
+    taskm::process([]() {
+      std::cout << "Folyamat fut!" << std::endl;
+    })
+  );
+
+  taskm::add(task1);
+  taskm::run(task1.id);
+  std::cout << "Első tick" << std::endl;
+  taskm::tick();
+  taskm::tick();
+  taskm::repeat(task1.id);
+  taskm::tick();
+  taskm::tick();
+  taskm::tick();
+  taskm::tick();
+  taskm::tick();
+  taskm::tick();
+  taskm::tick();
 
   return 0;
 }

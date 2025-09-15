@@ -9,50 +9,57 @@
 #include <engine/core/taskm/flow.hpp>
 #include <engine/core/taskm/def_flow/repeat.hpp>
 #include <engine/core/taskm/def_flow/scheduler.hpp>
-
 namespace taskm {
   
   namespace internal {
-
+    bool running = true;
   }
 
   void init() {
     internal::controllers.push_back({&internal::repeat_controller});
     internal::controllers.push_back({&internal::schedule_controller});
+    internal::running = true;
   }
 
+  // írd újra
   void tick() {
 
+    // controllerek futtatása. 
     for (auto* controller_ptr = internal::controllers.data();
        controller_ptr != internal::controllers.data() + internal::controllers.size();
-       ++controller_ptr) {
-      controller_ptr->func();
+       ++controller_ptr) { // ez asszem a helyes loop (ptr it)
+      controller_ptr->func(); // controller structban lévő func meghívása. nincs segfault
     }
-    internal::failed.clear();
+    internal::failed.clear(); // failed törlése a controllerek futása után
 
-    for (auto* task_ptr = internal::next.data();
-       task_ptr != internal::next.data() + internal::next.size();
-       ++task_ptr) {
-      if (!*task_ptr) return;
+    for (size_t task_i = 0; // nexten, HELYES loop. next az Task* azaz task_ptr az Task**
+       task_i < internal::next.size();
+       task_i++) { // Helyes it loop
+
+      auto& task = internal::next[task_i];
+
+      if (!task.valid) {internal::running = false; return;};
+      auto* task_ptr = task.get();  
+
       bool ready = true;
-      for (auto& cond : (*task_ptr)->conditions) {
-        if (!cond.func()) {
+      for (auto& cond : task_ptr->conditions) { // normál loop.
+        if (!cond.func()) { // Ha egy is hamis, mind hamise.
           ready = false;
           break;
         }
       }
-      if (ready) {
-        for (auto* task_proc_ptr = (*task_ptr)->process.data();
-        task_proc_ptr != (*task_ptr)->process.data() + (*task_ptr)->process.size();
-        ++task_proc_ptr) {
-          task_proc_ptr->func();
+      if (ready) { // Ha végül igaz lett
+        for (auto* task_proc_ptr = task_ptr->process.data(); // a Task* nek a processén ptr loop
+        task_proc_ptr != task_ptr->process.data() + task_ptr->process.size();
+        ++task_proc_ptr) { // Helyes iterátor loop?
+          task_proc_ptr->func(); // Ez egy ProcessF* most
         }
       } else {
-        internal::failed.insert((*task_ptr)->id);
+        internal::failed.insert(task_ptr->id);
       }
-      internal::next.clear();
     }
     
+    internal::next.clear();
     internal::frame++;
   }
 
@@ -60,7 +67,9 @@ namespace taskm {
     
   }
 
-  void add(Task task) {
+  void add(Task& task) {
     internal::tasks.push_back(task);
+    task.id.pos = internal::tasks.size() - 1;
+    std::cout << internal::tasks.size() - 1 << std::endl;
   }
 }
